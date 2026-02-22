@@ -1,22 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Viewport meta tag for mobile scaling -->
   <title>MCQ Quiz</title>
   <style>
-    body { font-family: Arial; margin: 20px; }
-    .question { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 10px; }
-    .correct { background-color: #d4edda; }
-    .wrong { background-color: #f8d7da; }
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 1rem; /* Default font size */
+      margin: 20px;
+    }
+
+    h2 {
+      font-size: 2rem; /* Larger header */
+    }
+
+    .question {
+      margin: 20px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      width: 100%; /* Make questions full-width */
+    }
+
+    .correct {
+      background-color: #d4edda;
+    }
+
+    .wrong {
+      background-color: #f8d7da;
+    }
+
     .mark {
       font-weight: bold;
       margin-left: 10px;
     }
-    .correct-mark { color: green; }
-    .wrong-mark { color: red; }
+
+    .correct-mark {
+      color: green;
+    }
+
+    .wrong-mark {
+      color: red;
+    }
+
     label {
       display: block;
       margin: 4px 0;
+      font-size: 1rem; /* Make label text size responsive */
+    }
+
+    button {
+      font-size: 1rem;
+      padding: 10px 20px;
+      width: 100%; /* Make button full-width on smaller screens */
+    }
+
+    /* Mobile Styles (for screens less than 600px wide) */
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9rem; /* Smaller text size for mobile */
+      }
+
+      h2 {
+        font-size: 1.5rem; /* Smaller header on mobile */
+      }
+
+      .question {
+        padding: 8px; /* Reduce padding for mobile screens */
+      }
+
+      label {
+        font-size: 1rem; /* Ensure labels are readable */
+      }
+
+      button {
+        font-size: 1rem;
+        padding: 10px 20px;
+      }
     }
   </style>
 </head>
