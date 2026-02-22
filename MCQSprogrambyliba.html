@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MCQ Quiz</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    .question { margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 10px; }
+    .correct { background-color: #d4edda; }
+    .wrong { background-color: #f8d7da; }
+    .mark {
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .correct-mark { color: green; }
+    .wrong-mark { color: red; }
+    label {
+      display: block;
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h2>MCQ Quiz</h2>
+<div id="quiz">Loading quiz...</div>
+<button onclick="submitQuiz()">Submit Quiz</button>
+<div id="result"></div>
+
+<script>
+const apiUrl = 'https://script.google.com/macros/s/AKfycbx6ckRkgI8PIZ6rU2b1V1dCmVM43M41pWMYeiDI2dM5bm0ra5_FCorsFBClGqjDZgQ4/exec';
+
+let quizData = [];
+
+function loadQuiz() {
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      quizData = data;
+      renderQuiz();
+    })
+    .catch(err => {
+      document.getElementById('quiz').innerText = "Error loading quiz.";
+      console.error(err);
+    });
+}
+
+function renderQuiz() {
+  const quizDiv = document.getElementById('quiz');
+  quizDiv.innerHTML = '';
+  quizData.forEach((q, idx) => {
+    const qDiv = document.createElement('div');
+    qDiv.classList.add('question');
+    qDiv.innerHTML = `<p><strong>Q${idx + 1}:</strong> ${q.question}</p>` +
+      q.options.map((opt, i) => {
+        const letter = String.fromCharCode(65 + i);
+        return `<label><input type="radio" name="q${idx}" value="${letter}">${letter}: ${opt}</label>`;
+      }).join('');
+    quizDiv.appendChild(qDiv);
+  });
+}
+
+function submitQuiz() {
+  let score = 0;
+  quizData.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    q.userAnswer = selected ? selected.value : null;
+    if (q.userAnswer === q.correct) score++;
+  });
+
+  const quizDiv = document.getElementById('quiz');
+  quizDiv.innerHTML = '';
+  quizData.forEach((q, idx) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'question ' + (q.userAnswer === q.correct ? 'correct' : 'wrong');
+    qDiv.innerHTML = `<p><strong>Q${idx + 1}:</strong> ${q.question}</p>` +
+      q.options.map((opt, i) => {
+        const letter = String.fromCharCode(65 + i);
+        let mark = '';
+        let markClass = '';
+        if (q.correct === letter) {
+          mark = '✔️';
+          markClass = 'correct-mark';
+        } else if (q.userAnswer === letter) {
+          mark = '❌';
+          markClass = 'wrong-mark';
+        }
+        return `<label>${letter}: ${opt} <span class="mark ${markClass}">${mark}</span></label>`;
+      }).join('');
+    quizDiv.appendChild(qDiv);
+  });
+
+  const percentage = (score / quizData.length) * 100;
+  let message = `<h3>Your Score: ${score} / ${quizData.length} (${percentage.toFixed(1)}%)</h3>`;
+
+  if (percentage === 100) {
+    message += `<p style="color: darkgreen; font-size: 18px;">🏆🎉 <strong>Wonderful! You are a champion! 🏅</strong> 🎉🏆</p>`;
+  } else if (percentage >= 80) {
+    message += `<p style="color: green; font-size: 18px;">🎉 <strong>Excellent! You scored above 80%!</strong> 🎉</p>`;
+  } else {
+    message += `<p style="color: orange; font-size: 16px;">👍 <strong>Good try!</strong> Keep practicing. 💪</p>`;
+  }
+
+  document.getElementById('result').innerHTML = message;
+}
+
+loadQuiz();
+</script>
+
+</body>
+</html>
